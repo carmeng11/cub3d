@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: cagomez- <cagomez-@student.42.fr>          +#+  +:+       +#+         #
+#    By: carmen <carmen@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/02 12:00:00 by cagomez-          #+#    #+#              #
-#    Updated: 2026/02/06 18:32:05 by cagomez-         ###   ########.fr        #
+#    Updated: 2026/02/10 20:28:49 by carmen           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,6 +32,7 @@ MLX_FLAGS	= -L$(MLX_DIR) -lmlx_Linux -lXext -lX11 -lm
 SRC			= $(SRC_DIR)/main.c \
 			  $(SRC_DIR)/init.c \
 			  $(SRC_DIR)/player.c \
+			  $(SRC_DIR)/raycasting.c \
 			  $(SRC_DIR)/pixel_draw.c \
 			  $(SRC_DIR)/map_draw.c \
 			  $(SRC_DIR)/render.c \

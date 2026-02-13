@@ -16,9 +16,9 @@ int	close_window(t_game *game)
 
 void	events_init(t_game *game)
 {
-	// Evento de teclado tecola presionada
+	// Evento de teclado tecla presionada
 	mlx_hook(game->win, KeyPress, KeyPressMask, key_press, game);
-    // Evento de teclado tecola soltada
+    // Evento de teclado tecla soltada
 	mlx_hook(game->win, KeyRelease, KeyReleaseMask, key_release, game);
 	// Evento de cerrar ventana (X roja)
 	mlx_hook(game->win, DestroyNotify, StructureNotifyMask, close_window, game);
@@ -26,6 +26,7 @@ void	events_init(t_game *game)
     // Loop hook (renderizado constante)
 	//draw_square(&game->img, WIDTH / 2, HEIGHT / 2, 20, 0XA020F0);
 	mlx_loop_hook(game->mlx, render_game, game);
+	//render_game es el bucle principal del raycasting
 }
 // En events.c
 
@@ -33,6 +34,8 @@ void	events_init(t_game *game)
 // Función auxiliar para manejar movimiento
 int	key_press(int keycode, t_game *game)
 {
+	if (keycode == XK_Escape)
+		close_window(game);
 	if (keycode == XK_w)
 	{
 		// new_y -= 0.5;
@@ -55,14 +58,7 @@ int	key_press(int keycode, t_game *game)
 		game->player.right_rotate = true;
         //game->player.key_right = true;
 	return (0); // No es una tecla de movimiento
-    //PREGUNTAR POR ESTO
-	// if (can_move(game, new_x, new_y))
-	// {
-	// 	game->map.posX = new_x;
-	// 	game->map.posY = new_y;
-	// 	render_game(game);
-	// }
-}
+  }
 
 int key_release(int keycode, t_game *game)
 {

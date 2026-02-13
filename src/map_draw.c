@@ -3,13 +3,13 @@
 
 // QUIZA RENOMBRAR EL FICHERO A RENDER
 
-void	map_draw(t_game *game)
-{
-	draw_minimap(game);
-	mlx_put_image_to_window(game->mlx, game->win, game->img.img_ptr, 0, 0);
-}
+// void	map_draw(t_game *game)
+// {
+// 	//draw_minimap(game);
+// 	mlx_put_image_to_window(game->mlx, game->win, game->img.img_ptr, 0, 0);
+// }
 
-// FUNCION CON TILE_SIZE QUE ME DABA PROBLEMAS AL TEBER BLOCK Y ILE_SIZE
+// FUNCION CON TILE_SIZE QUE ME DABA PROBLEMAS AL TEBER BLOCK Y TILE_SIZE
 // void	init_map(t_map *map)
 // {
 // 	map->width = 30;
@@ -55,7 +55,17 @@ void	map_draw(t_game *game)
 //     draw_square(&game->img, px, py, 10, 0x00FF00);
 
 // }
+//ESTRUCTURA PARA BONUS PARA EL DIBUJO DEL JUGADOR
+// typedef struct s_point
+// {
+//     int x;
+//     int y;
+// }   t_point;
+// Ahora solo 4 parámetros
+// void draw_square(t_img *img, t_point pos, int size, int color);
 
+// // Llamada:
+// draw_square(&game->img, (t_point){x * BLOCK, y * BLOCK}, BLOCK, color);
 
 void	draw_minimap(t_game *game)
 {

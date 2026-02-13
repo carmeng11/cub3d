@@ -11,7 +11,7 @@ int main(int argc, char **argv)
 	if (argc != 2)
 	{
 		//print_error("Usage_print: ./cub3d <map.cub>");
-		ft_putstr_fd("Usage: ./cub3d <map.cub>\n", STDERR_FILENO);
+		ft_putstr_fd("Usage: ./cub3D <map.cub>\n", STDERR_FILENO);
 		return (1);
 	}
 

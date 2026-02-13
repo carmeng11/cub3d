@@ -20,8 +20,8 @@
 // #define LEFT 65361
 // #define RIGHT 65363
 # define PI 3.14159265359
-# define MOVE_SPEED 5.0
-# define ROTATE_SPEED 0.05
+# define MOVE_SPEED 3.0
+# define ROTATE_SPEED 0.03
 
 // Estructura para las texturas (rutas a archivos .xpm)
 typedef struct s_textures
@@ -137,5 +137,11 @@ void		move_player(t_game *game);
 // Funciones de utils
 char		*get_next_line(int fd);
 char		*ft_strdup_gnl(char *str);
+
+// Raycasting
+bool    touch(float ray_x, float ray_y, t_game *game);
+float   distance(float x, float y);
+void	cast_ray(t_game *game, float start_x, int i);
+void    render_3d(t_game *game);
 
 #endif

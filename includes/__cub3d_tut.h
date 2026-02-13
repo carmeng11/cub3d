@@ -54,7 +54,12 @@ typedef struct s_player
 	float	ray_y;
 	float	cos_angle;
 	float	sin_angle;
-
+	//     double  posX;       // ✅ Ya lo tienes en map
+//     double  posY;       // ✅ Ya lo tienes en map
+//     double  dirX;       // ❌ FALTA - Dirección del vector (raycasting)
+//     double  dirY;       // ❌ FALTA - Dirección del vector (raycasting)
+//     double  planeX;     // ❌ FALTA - Plano de la cámara (raycasting)
+//     double  planeY;     // ❌ FALTA - Plano de la cámara (raycasting)
 }   t_player;
 
 typedef	struct s_rec
@@ -76,6 +81,9 @@ typedef struct s_game
 	int		endian;			// Orden de bytes
 	char	**map;
 	int	color;
+    //t_map	map; //PONERLO LUEGO LO QUITO POR SEGUIR TUTORIAL
+	//t_img	img;
+	//A FUTURO
 	t_player    player;  // ❌ FALTA - Para el raycasting
 }   t_game;
 
@@ -107,6 +115,8 @@ int     close_window(t_game *game);
 void	events_init(t_game *game);
 int		game_destroy(t_game *game);
 void    render_game(t_game *game);
+
+// Player FUNCIONES DEL TUTORIAL
 void	init_player(t_player *player);
 int		key_press(int keycode, t_player *player);
 int		key_release(int keycode, t_player *player);

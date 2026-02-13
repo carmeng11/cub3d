@@ -20,8 +20,19 @@ int render_game(t_game *game)
 
     clear_image(game);
 	// Dibujar el minimap actualizado
-	draw_minimap(game);
-  	
+	//draw_minimap(game); // ESTO es 2D (bonus)
+	//render_3d(game);
+	float	fraction = PI / 3 / WIDTH;  // Incremento angular entre rayos consecutivos
+	float	start_x = game->player.angle + PI / 6;  // PI/6 = 30 grados
+	int	i = 0;
+	while (i < WIDTH)
+	{
+		cast_ray(game, start_x, i);  // Lanzar rayo en ángulo 'start_x', dibujar en columna 'i'
+		start_x -= fraction;  // DECREMENTAR ángulo (de izquierda a derecha del jugador)
+		i++;
+	}
+
+	//draw_minimap(game);
 	// Mostrar la imagen en la ventana
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img_ptr, 0, 0);
     return (0);

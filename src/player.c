@@ -1,72 +1,93 @@
 #include "cub3d.h"
 
-void	move_player(t_game *game)
+void	handle_rotation(t_player *player)
 {
-	t_player	*p;
-	float		new_x;
-	float		new_y;
-
-	p = &game->player;
-	// Precalcular cos/sin
-	p->cos_angle = cos(p->angle);
-	p->sin_angle = sin(p->angle);
+	player->cos_angle = cos(player->angle);
+	player->sin_angle = sin(player->angle);
 	// ===== ROTACIÓN =====
-	if (p->left_rotate)
-		p->angle += ROTATE_SPEED;
-	if (p->right_rotate)
-		p->angle -= ROTATE_SPEED;
+	if (player->left_rotate)
+		player->angle += ROTATE_SPEED;
+	if (player->right_rotate)
+		player->angle -= ROTATE_SPEED;
 	// Normalizar ángulo
-	if (p->angle > 2 * PI)
-		p->angle -= 2 * PI;
-	if (p->angle < 0)
-		p->angle += 2 * PI;
-	// ===== ADELANTE (W) =====
-	if (p->key_up)
+	if (player->angle > 2 * PI)
+		player->angle -= 2 * PI;
+	if (player->angle < 0)
+		player->angle += 2 * PI;
+}
+
+static void	move_forward(t_game *game)
+{
+	float	new_x;
+	float	new_y;
+
+	new_x = game->player.x + game->player.cos_angle * MOVE_SPEED;
+	new_y = game->player.y - game->player.sin_angle * MOVE_SPEED;
+	if (can_move(game, new_x, new_y))
 	{
-		new_x = p->x + p->cos_angle * MOVE_SPEED;
-		new_y = p->y - p->sin_angle * MOVE_SPEED;
-		if (can_move(game, new_x, new_y))
-		{
-			p->x = new_x;
-			p->y = new_y;
-		}
-	}
-	// ===== ATRÁS (S) =====
-	if (p->key_down)
-	{
-		new_x = p->x - p->cos_angle * 5;
-		new_y = p->y + p->sin_angle * 5;
-		if (can_move(game, new_x, new_y))
-		{
-			p->x = new_x;
-			p->y = new_y;
-		}
-	}
-	// ===== IZQUIERDA (A) =====
-	if (p->key_left)
-	{
-		new_x = p->x - p->sin_angle * 5;
-		new_y = p->y - p->cos_angle * 5;
-		if (can_move(game, new_x, new_y))
-		{
-			p->x = new_x;
-			p->y = new_y;
-		}
-	}
-	// ===== DERECHA (D) =====
-	if (p->key_right)
-	{
-		new_x = p->x + p->sin_angle * 5;
-		new_y = p->y + p->cos_angle * 5;
-		if (can_move(game, new_x, new_y))
-		{
-			p->x = new_x;
-			p->y = new_y;
-		}
+		game->player.x = new_x;
+		game->player.y = new_y;
 	}
 }
 
+static void	move_backward(t_game *game)
+{
+	float	new_x;
+	float	new_y;
 
+	new_x = game->player.x - game->player.cos_angle * MOVE_SPEED;
+	new_y = game->player.y + game->player.sin_angle * MOVE_SPEED;
+	if (can_move(game, new_x, new_y))
+	{
+		game->player.x = new_x;
+		game->player.y = new_y;
+	}
+}
+
+static void	move_left(t_game *game)
+{
+	float	new_x;
+	float	new_y;
+
+	new_x = game->player.x - game->player.sin_angle * MOVE_SPEED;
+	new_y = game->player.y - game->player.cos_angle * MOVE_SPEED;
+	if (can_move(game, new_x, new_y))
+	{
+		game->player.x = new_x;
+		game->player.y = new_y;
+	}
+}
+
+static void	move_right(t_game *game)
+{
+	float	new_x;
+	float	new_y;
+
+	new_x = game->player.x + game->player.sin_angle * MOVE_SPEED;
+	new_y = game->player.y + game->player.cos_angle * MOVE_SPEED;
+	if (can_move(game, new_x, new_y))
+	{
+		game->player.x = new_x;
+		game->player.y = new_y;
+	}
+}
+void	handle_movement(t_game *game)
+{
+	if (game->player.key_up)
+		move_forward(game);
+	if (game->player.key_down)
+		move_backward(game);
+	if (game->player.key_left)
+		move_left(game);
+	if (game->player.key_right)
+		move_right(game);
+}
+
+void	move_player(t_game *game)
+{
+	handle_rotation(&game->player);
+	handle_movement(game);
+}
 
 // Función auxiliar para validar movimiento VALIDA COLISIONES
 int	can_move(t_game *game, double x, double y)

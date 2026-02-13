@@ -76,7 +76,7 @@ void	init_player(t_game *game)
 // 	// game->map.posY = game->map.height / 2;
 //     game->map.start_dir = 'N'; // Dirección inicial
 //     // En el futuro: texturas, colores, etc.
-// 	// ✅ Ya NO inicializas nada aquí
+// 	// Ya NO inicializas nada aquí
 //     // Todo se hará en init_map()
     
 //     // Solo inicializar punteros a NULL (seguridad)
@@ -87,7 +87,8 @@ void	init_player(t_game *game)
 // Función para crear un mapa de prueba simple
 void init_map(t_game *game)
 {
-    char **map;
+
+	char **map;
     
     // Crear mapa simple
     map = malloc(sizeof(char*) * 11);
@@ -152,7 +153,7 @@ void	game_init(t_game *game)
 	
 	// Test: dibujar cuadrados de colores
 	//data_init(game);
-	map_draw(game);
+	//map_draw(game);
 	//mirar si se crea una función events_init que llame a todas las mlx_hook
 	events_init(game);
 	mlx_loop(game->mlx);
