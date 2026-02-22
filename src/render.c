@@ -1,66 +1,68 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   render.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: carmen <carmen@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/15 14:55:52 by cagomez-          #+#    #+#             */
+/*   Updated: 2026/02/21 22:41:57 by carmen           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "cub3d.h"
 
-// Función para escribir un píxel en la imagen
-// void    my_mlx_pixel_put(t_img *img, int x, int y, int color)
-// {
-//     char    *dst;
-
-//     // Calcular la posición del píxel en memoria
-//     dst = img->pixels_ptr + (y * img->line_len + x * (img->bpp / 8));
-// 	// Escribir el color en esa posición
-//     *(unsigned int*)dst = color;
-// }
-
-//INCORPORAMOS RENDER_GAME
-int render_game(t_game *game)
+void	my_mlx_pixel_put(t_img *img, int x, int y, int color)
 {
-    // static int frame = 0;
-    // printf("Frame: %d\n", frame++); 
-    move_player(game);
+	char	*dst;
 
-    clear_image(game);
-	// Dibujar el minimap actualizado
-	//draw_minimap(game); // ESTO es 2D (bonus)
-	//render_3d(game);
-	float	fraction = PI / 3 / WIDTH;  // Incremento angular entre rayos consecutivos
-	float	start_x = game->player.angle + PI / 6;  // PI/6 = 30 grados
-	int	i = 0;
+	dst = img->pixels_ptr + (y * img->line_len + x * (img->bpp / 8));
+	*(unsigned int *)dst = color;
+}
+
+int	render_game(t_game *game)
+{
+	int		i;
+	float	fraction;
+	float	start_x;
+
+	move_player(game);
+	clear_image(game);
+	// draw_minimap(game);
+	fraction = PI / 3 / WIDTH;
+	start_x = game->player.angle + PI / 6;
+	i = 0;
 	while (i < WIDTH)
 	{
-		cast_ray(game, start_x, i);  // Lanzar rayo en ángulo 'start_x', dibujar en columna 'i'
-		start_x -= fraction;  // DECREMENTAR ángulo (de izquierda a derecha del jugador)
+		cast_ray(game, start_x, i);
+		start_x -= fraction;
 		i++;
 	}
-
-	//draw_minimap(game);
-	// Mostrar la imagen en la ventana
 	mlx_put_image_to_window(game->mlx, game->win, game->img.img_ptr, 0, 0);
-    return (0);
-}
-void clear_image(t_game *game)
-{
-    int y;  // Contador de filas
-    int x;  // Contador de columnas
-
-    // Recorrer TODA la pantalla (cada píxel)
-    y = 0;
-    while (y < HEIGHT)  // Para cada fila (de 0 a 719)
-    {
-        x = 0;
-        while (x < WIDTH)  // Para cada columna (de 0 a 1279)
-        {
-            // Poner el píxel en negro (0x000000)
-            // Esto "borra" lo que había antes,lo pone a negro
-            my_mlx_pixel_put(&game->img, x, y, 0x000000);
-            x++;
-        }
-        y++;
-    }
+	return (0);
 }
 
-//FUNCION PARA OPTIMIZAR CLEAR IMAGE
-
-// void clear_image(t_game *game)
+// void	clear_image(t_game *game)
 // {
-//     ft_memset(game->img.pixels_ptr, 0, WIDTH * HEIGHT * 4);
+// 	int	y;
+// 	int	x;
+
+// 	y = 0;
+// 	while (y < HEIGHT)
+// 	{
+// 		x = 0;
+// 		while (x < WIDTH)
+// 		{
+// 			my_mlx_pixel_put(&game->img, x, y, 0x000000);
+// 			x++;
+// 		}
+// 		y++;
+// 	}
 // }
+
+// FUNCION PARA OPTIMIZAR CLEAR IMAGE
+
+void	clear_image(t_game *game)
+{
+	ft_memset(game->img.pixels_ptr, 0, WIDTH * HEIGHT * (game->img.bpp / 8));
+}

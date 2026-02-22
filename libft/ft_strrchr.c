@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: carmen <carmen@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cagomez- <cagomez-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/29 14:15:27 by cagomez-          #+#    #+#             */
-/*   Updated: 2026/01/13 18:54:53 by carmen           ###   ########.fr       */
+/*   Updated: 2026/02/15 16:36:04 by cagomez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ char	*ft_strrchr(const char *s, int c)
 // {
 // 	const char s[] = "me llamo carmen";
 // 	int	c;
-	
 // 	c = 'c';
 // 	printf("La función devuelve:%s\n", ft_strrchr(s, c));
 // 	printf("hola, mi nombre es %s y tengo %d años\n", "laura", 23);

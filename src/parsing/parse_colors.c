@@ -1,6 +1,5 @@
 #include "cub3d.h"
 #include <stdlib.h>
-#include <string.h>
 
 // Función auxiliar para convertir string a int y validar rango
 static int	ft_atoi_rgb(char *str)
@@ -29,43 +28,71 @@ static int	ft_atoi_rgb(char *str)
 	return (result);
 }
 
-// Función para parsear una línea de color (F o C)
-// Formato esperado: "F 220,100,0"
+// Función auxiliar para liberar el array de ft_split
+static void	free_split(char **split)
+{
+	int	i;
+
+	if (!split)
+		return;
+	i = 0;
+	while (split[i])
+	{
+		free(split[i]);
+		i++;
+	}
+	free(split);
+}
+
+/*
+** parse_color_line - Parsea una línea de color (F o C)
+** 
+** Formato esperado: "F 220,100,0" o "C 225,30,0"
+** Usa ft_split para separar por comas los valores R,G,B
+**
+** @line: Línea después del identificador (ej: " 220,100,0")
+** @color: Puntero a la estructura donde guardar RGB
+**
+** Return: 0 si OK, 1 si error
+*/
 int	parse_color_line(char *line, t_color *color)
 {
-	char	*rgb[3];
+	char	**rgb;
 	int		i;
-	int		j;
-	char	*token;
 
 	// Saltar espacios después del identificador (F o C)
 	i = 0;
 	while (line[i] && (line[i] == ' ' || line[i] == '\t'))
 		i++;
 
-	// Separar por comas (usar strtok o implementar tu propio split)
-	// Versión simple con strtok:
-	token = strtok(&line[i], ",");
-	j = 0;
-	while (token && j < 3)
+	// Separar por comas usando ft_split (permitida en 42)
+	rgb = ft_split(&line[i], ',');
+	if (!rgb)
 	{
-		rgb[j] = token;
-		token = strtok(NULL, ",");
-		j++;
+		print_error("Memory allocation failed");
+		return (1);
 	}
 
-	// Verificar que tengamos exactamente 3 valores
-	if (j != 3)
+	// Verificar que tengamos exactamente 3 valores (R, G, B)
+	i = 0;
+	while (rgb[i])
+		i++;
+	if (i != 3)
 	{
+		free_split(rgb);
 		print_error("Invalid color format (need R,G,B)");
 		return (1);
 	}
 
-	// Convertir y validar cada componente
+	// Convertir y validar cada componente (0-255)
 	color->r = ft_atoi_rgb(rgb[0]);
 	color->g = ft_atoi_rgb(rgb[1]);
 	color->b = ft_atoi_rgb(rgb[2]);
 
+	// Liberar memoria del split
+	free_split(rgb);
+
+	// Validar que todos los valores estén en rango
 	if (color->r == -1 || color->g == -1 || color->b == -1)
 	{
 		print_error("Color values must be 0-255");

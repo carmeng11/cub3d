@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   cub3d.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: carmen <carmen@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/02/15 16:38:00 by cagomez-          #+#    #+#             */
+/*   Updated: 2026/02/22 16:06:49 by carmen           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef CUB3D_H
 # define CUB3D_H
 
@@ -17,6 +29,7 @@
 # define HEIGHT 720
 # define BUFFER_SIZE 10
 # define BLOCK 64
+# define MAX_ITER 1000
 // #define LEFT 65361
 // #define RIGHT 65363
 # define PI 3.14159265359
@@ -26,122 +39,126 @@
 // Estructura para las texturas (rutas a archivos .xpm)
 typedef struct s_textures
 {
-	char *north; // OBLIGATORIO Ruta a textura Norte NO ./path
-	char *south; // OBLIGATORIO Ruta a textura Sur (SO)
-	char *west;  // OBLIGATORIO Ruta a textura Oeste (WE)
-	char *east;  // OBLIGATORIO Ruta a textura Este (EA)
-}			t_textures;
+	char		*north;
+	char		*south;
+	char		*west;
+	char		*east;
+}				t_textures;
 
-// Estructura para los colores RGB
 typedef struct s_color
 {
-	int r; // Red (0-255)
-	int g; // Green (0-255)
-	int b; // Blue (0-255)
-}			t_color;
+	int			r;
+	int			g;
+	int			b;
+}				t_color;
 
 typedef struct s_map
 {
-	char **grid; // OBLIGATORIO Matriz del mapa
-	int width;   // UTIL Ancho
-	int height;  // UTIL Alto
-	int		color;
-	double posX;    // OBLIGATORIO Posición inicial X
-	double posY;    // OBLIGATORIO Posición inicial Y
-	char start_dir; // OBLIGATORIO N, S, E, W
-}			t_map;
+	char		**grid;
+	int			width;
+	int			height;
+	int			color;
+	// double		pos_x;
+	// double		pos_y;
+	char		start_dir;
+}				t_map;
 
 typedef struct s_img
 {
-	void *img_ptr;    // Puntero a la imagen (mlx_new_image)
-	char *pixels_ptr; // Dirección de memoria de los píxeles (mlx_get_data_addr)
-	int bpp;          // Bits por píxel
-	int line_len;     // Bytes por línea
-	int endian;       // Orden de bytes
-}			t_img;
+	void	*img_ptr;
+	char	*pixels_ptr;
+	int		bpp;
+	int		line_len;
+	int		endian;
+}				t_img;
 
 typedef struct s_player
 {
-	float x;     // Posición actual X (en píxeles)
-	float y;     // Posición actual Y (en píxeles)
-	float angle; // Ángulo de rotación (radianes)
+	float		x;
+	float		y;
+	float		angle;
 
-	bool key_up;       // W presionado
-	bool key_down;     // S presionado
-	bool key_left;     // A presionado
-	bool key_right;    // D presionado
-	bool left_rotate;  // Flecha ← presionada
-	bool right_rotate; // Flecha → presionada
+	bool		key_up;
+	bool		key_down;
+	bool		key_left;
+	bool		key_right;
+	bool		left_rotate;
+	bool		right_rotate;
+	// float		ray_x;
+	// float		ray_y;
+	float		cos_angle;
+	float		sin_angle;
+	}				t_player;
+	
+typedef struct s_ray
+{
 	float	ray_x;
 	float	ray_y;
-	float cos_angle; // Precalculado (optimización)
-	float sin_angle; // Precalculado (optimización)
-}			t_player;
+	float	cos_dir;
+	float	sin_dir;
+}			t_ray;
+
 
 typedef struct s_game
 {
-	void	*mlx;
-	void	*win;
-	char	*name;
-	t_map	map;
-	t_img	img;
-	t_textures textures; // Texturas del archivo .cub
-	t_color floor;       // Color del suelo (F)
-	t_color ceiling;     // Color del techo (C)
-	// A FUTURO
-	t_player player; //  FALTA - Para el raycasting
-}			t_game;
+	void		*mlx;
+	void		*win;
+	char		*name;
+	t_map		map;
+	t_img		img;
+	t_textures	textures;
+	t_color		floor;
+	t_color		ceiling;
+	t_player	player;
+	t_ray		ray;
+}				t_game;
 
-// A FUTURO
-// typedef struct s_player
-// {
-//     double  posX;       //  Ya lo tienes en map
-//     double  posY;       //  Ya lo tienes en map
-//     double  dirX;       //  FALTA - Dirección del vector (raycasting)
-//     double  dirY;       //  FALTA - Dirección del vector (raycasting)
-//     double  planeX;     //  FALTA - Plano de la cámara (raycasting)
-//     double  planeY;     // FALTA - Plano de la cámara (raycasting)
-// }   t_player;
+typedef struct s_rect
+{
+	int	x;
+	int	y;
+	int	size;
+	int	color;
+}	t_rect;
 
 // Funciones de parsing
-int			parse_cub_file(char *filename, t_game *game);
-int			parse_texture_line(char *line, char **texture);
-int			parse_color_line(char *line, t_color *color);
-void		print_error(char *message);
+int				parse_cub_file(char *filename, t_game *game);
+int				parse_texture_line(char *line, char **texture);
+int				parse_color_line(char *line, t_color *color);
+void			print_error(char *message);
 
 // Funciones de dibujo
-void		my_mlx_pixel_put(t_img *img, int x, int y, int color);
-void		draw_square(t_img *img, int x, int y, int size, int color);
-void		draw_minimap(t_game *game);
-void		init_map(t_game *game);
-void		map_draw(t_game *game);
-void		clear_image(t_game *game);
+void			my_mlx_pixel_put(t_img *img, int x, int y, int color);
+void			draw_square(t_img *img, t_rect rect);
+void			draw_minimap(t_game *game);
+void			init_map(t_game *game);
+void			map_draw(t_game *game);
+void			clear_image(t_game *game);
 
 // Funciones de inicialización
-void		data_init(t_game *game);
-void		game_init(t_game *game);
+void			data_init(t_game *game);
+void			game_init(t_game *game);
 
 // Funciones de eventos
 // int			key_hook(int keycode, t_game *game);
-int			close_window(t_game *game);
-void		events_init(t_game *game);
-void		game_destroy(t_game *game);
-int			render_game(t_game *game);
+int				close_window(t_game *game);
+void			events_init(t_game *game);
+void			game_destroy(t_game *game);
+int				render_game(t_game *game);
 
 // Funciones de movimiento
-int			can_move(t_game *game, double new_x, double new_y);
-int	key_press(int keycode, t_game *game); // Si usas Opción 2
-int			key_release(int keycode, t_game *game);
-void		move_player(t_game *game);
+int				can_move(t_game *game, double new_x, double new_y);
+int				key_press(int keycode, t_game *game); // Si usas Opción 2
+int				key_release(int keycode, t_game *game);
+void			move_player(t_game *game);
 
 // Funciones de utils
-char		*get_next_line(int fd);
-char		*ft_strdup_gnl(char *str);
+char			*get_next_line(int fd);
+char			*ft_strdup_gnl(char *str);
 
 // Raycasting
-bool    touch(float ray_x, float ray_y, t_game *game);
-float   distance(float x, float y);
-void	cast_ray(t_game *game, float start_x, int i);
-void    render_3d(t_game *game);
+bool			touch(float ray_x, float ray_y, t_game *game);
+float			distance(float x, float y);
+void			cast_ray(t_game *game, float start_x, int i);
 
 #endif
