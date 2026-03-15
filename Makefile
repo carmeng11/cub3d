@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: carmen <carmen@student.42.fr>              +#+  +:+       +#+         #
+#    By: cagomez- <cagomez-@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2026/01/02 12:00:00 by cagomez-          #+#    #+#              #
-#    Updated: 2026/02/14 13:55:10 by carmen           ###   ########.fr        #
+#    Updated: 2026/03/15 19:43:23 by cagomez-         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -37,10 +37,14 @@ SRC			= $(SRC_DIR)/main.c \
 			  $(SRC_DIR)/render.c \
 			  $(SRC_DIR)/events.c \
 			  $(SRC_DIR)/parsing/parse_file.c \
+			  $(SRC_DIR)/parsing/parse_map.c \
 			  $(SRC_DIR)/parsing/parse_textures.c \
 			  $(SRC_DIR)/parsing/parse_colors.c \
+			  $(SRC_DIR)/parsing/parse_elements.c \
 			  $(SRC_DIR)/utils/error.c \
+			  $(SRC_DIR)/utils/cleanup.c \
 			  $(SRC_DIR)/utils/get_next_line.c \
+			  $(SRC_DIR)/texture_loader.c
 
 # Objetos
 OBJ			= $(SRC:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)

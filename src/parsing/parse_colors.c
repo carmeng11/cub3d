@@ -1,7 +1,19 @@
-#include "cub3d.h"
-#include <stdlib.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_colors.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cagomez- <cagomez-@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/03/15 19:27:17 by cagomez-          #+#    #+#             */
+/*   Updated: 2026/03/15 19:27:18 by cagomez-         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-// Función auxiliar para convertir string a int y validar rango
+#include "cub3d.h"
+
+
+
 static int	ft_atoi_rgb(char *str)
 {
 	int	result;
@@ -9,18 +21,22 @@ static int	ft_atoi_rgb(char *str)
 
 	result = 0;
 	i = 0;
-	
-	// Saltar espacios
-	while (str[i] && (str[i] == ' ' || str[i] == '\t'))
-		i++;
-	
-	// Convertir dígitos
+
+	if(str[i] == '-')
+		return(-1);
+	if (!(str[i] >= '0' && str[i] <= '9'))
+		return (-1);
 	while (str[i] >= '0' && str[i] <= '9')
 	{
 		result = result * 10 + (str[i] - '0');
 		i++;
 	}
-	
+	//saltamos espacios finales "220,100,0\n\0" el gnl devuelve línea incluyento \n y cualquier cadena termina en \0
+	while (str[i] && (str[i] == '\n' || str[i] == '\r'))
+		i++;
+	if (str[i] != '\0')  // tu condición era correcta, faltaba este paso previo
+    	return (-1);
+		
 	// Validar rango (0-255)
 	if (result < 0 || result > 255)
 		return (-1);
@@ -62,8 +78,9 @@ int	parse_color_line(char *line, t_color *color)
 
 	// Saltar espacios después del identificador (F o C)
 	i = 0;
-	while (line[i] && (line[i] == ' ' || line[i] == '\t'))
-		i++;
+	//COMENTARIAMOS EL WHILE SI QUEREMOS VERSION ESTRICTA SIN ESPACIOS
+	// while (line[i] && (line[i] == ' ' || line[i] == '\t'))
+	// 	i++;
 
 	// Separar por comas usando ft_split (permitida en 42)
 	rgb = ft_split(&line[i], ',');
@@ -93,6 +110,7 @@ int	parse_color_line(char *line, t_color *color)
 	free_split(rgb);
 
 	// Validar que todos los valores estén en rango
+	//color->r es el valor que retorna del atoi y no puede ser 1 pq es un color, debe ser un valor que no esté entre 0-255
 	if (color->r == -1 || color->g == -1 || color->b == -1)
 	{
 		print_error("Color values must be 0-255");

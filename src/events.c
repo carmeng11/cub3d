@@ -6,7 +6,7 @@
 /*   By: cagomez- <cagomez-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 14:55:25 by cagomez-          #+#    #+#             */
-/*   Updated: 2026/02/15 19:21:28 by cagomez-         ###   ########.fr       */
+/*   Updated: 2026/03/15 19:54:20 by cagomez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,8 @@
 
 int	close_window(t_game *game)
 {
-	mlx_destroy_window(game->mlx, game->win);
+	game_destroy(game);  // ← CAMBIO: En lugar de solo mlx_destroy_window
+	//mlx_destroy_window(game->mlx, game->win);
 	exit(0);
 	return (0);
 }

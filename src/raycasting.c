@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   raycasting.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: carmen <carmen@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cagomez- <cagomez-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 14:55:17 by cagomez-          #+#    #+#             */
-/*   Updated: 2026/02/22 13:19:38 by carmen           ###   ########.fr       */
+/*   Updated: 2026/03/11 18:25:54 by cagomez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,8 +72,8 @@ void	cast_ray(t_game *game, float start_x, int i)
 	count = 0;
 	while (!touch(game->ray.ray_x, game->ray.ray_y, game) && count < MAX_ITER)
 	{
-		game->ray.ray_x += game->ray.cos_dir;
-		game->ray.ray_y -= game->ray.sin_dir;
+		game->ray.ray_x += game->ray.cos_dir * 0.5;
+		game->ray.ray_y -= game->ray.sin_dir * 0.5;
 		count++;
 	}
 	if (count >= MAX_ITER)

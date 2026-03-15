@@ -1,54 +1,102 @@
 #include "cub3d.h"
-#include <string.h>
-#include <stdlib.h>
 
-// Función para parsear una línea de textura (NO, SO, WE, EA)
-// Formato esperado: "NO ./textures/north.xpm"
-int	parse_texture_line(char *line, char **texture)
+/*
+** extract_path - Extrae el path de textura desde la línea
+**
+** @line: Línea a parsear
+** @path: Puntero donde guardar el path extraído
+** Return: 0 si OK, 1 si error
+*/
+static int	extract_path(char *line, char **path)
 {
-	char	*path;
-	int		i;
+	int	i;
+	int	len;
 
-	// Saltar espacios después del identificador (NO, SO, etc.)
 	i = 0;
+	// Recibe la línea después del identificador,
+		//por ejemplo " ./textures/north.xpm\n".
+	// Salta espacios y tabs iniciales con i
 	while (line[i] && (line[i] == ' ' || line[i] == '\t'))
 		i++;
-
-	// Si ya no hay nada, error
-	if (!line[i])
+	len = 0;
+	while (line[i + len] && line[i + len] != '\n' && line[i + len] != ' ')
+		len++;
+	if (len == 0)
 	{
-		print_error("Missing texture path");
+		print_error("Empty texture path");
 		return (1);
 	}
-
-	// Guardar la ruta (eliminar salto de línea si existe)
-	path =ft_strdup(&line[i]);
-	if (!path)
+	// saltar espacios finales y si encuentra algo que de error gestiona como error este caso EA ./textures/east.xpm     fgfgfg
+	// while (line[i + len] && (line[i + len] == ' ' || line[i + len] == '\t'))
+	//     len++;
+	// // si queda algo que no sea \n o \0 → error
+	// if (line[i + len] != '\n' && line[i + len] != '\0')
+	// {
+	//     print_error("Invalid texture pathhhhh");
+	//     return (1);
+	// }
+	*path = ft_substr(line, i, len);
+	if (!*path)
 	{
-		print_error("Memory allocation failed");
 		return (1);
 	}
+	return (0);
+}
 
-	// Eliminar \n al final si existe
-	// GNL devuelve la línea CON el \n, hay que quitarlo
-	i = 0;
-	while (path[i] && path[i] != '\n')
-		i++;
-	path[i] = '\0';  // Reemplaza \n por \0 (fin de string)
+/*
+** validate_texture_file - Verifica que el archivo existe y es .xpm
+**
+** @path: Ruta del archivo a verificar
+** Return: 0 si OK, 1 si error
+*/
+static int	validate_texture_file(char *path)
+{
+	int		fd;
+	size_t	len;
 
-	// VERIFICACIÓN: Si ya había una textura asignada, error (duplicado)
-	// *texture desreferencia el puntero para ver si ya apunta a algo
-	// Ejemplo: si NO ya se parseó antes, *texture != NULL
-	if (*texture != NULL)
+	fd = open(path, O_RDONLY);
+	if (fd < 0)
 	{
-		free(path);  // Liberar la memoria que acabamos de asignar
+		printf("Error: Texture file not found: %s\n", path);
+		return (1);
+	}
+	close(fd);
+	// verificamos que es .xpm En la ruta "NO ./textures/north.xpm" (path + len
+		//- 4) nos situa justo delante del '.'
+	len = ft_strlen(path);
+	if (len < 4 || ft_strncmp(path + len - 4, ".xpm", 4) != 0)
+	{
+		printf("Error: Texture must be .xpm: %s\n", path);
+		return (1);
+	}
+	return (0);
+}
+
+/*
+** parse_texture_line - Parsea una línea de textura del .cub
+**
+** @line: Línea del archivo .cub
+** @texture_path: Puntero al campo de textura
+** Return: 0 si OK, 1 si error
+*/
+int	parse_texture_line(char *line, char **texture_path)
+{
+	char *path;
+
+	if (extract_path(line, &path) != 0)
+		return (1);
+	if (validate_texture_file(path))
+	{
+		free(path);
+		return (1);
+	}
+	if (*texture_path != NULL)
+	{
+		free(path);
 		print_error("Duplicate texture identifier");
 		return (1);
 	}
-
-	// ASIGNACIÓN: Modificar el puntero original para que apunte al path
-	// *texture = desreferencia el doble puntero para modificar el puntero original
-	// Esto hace que game->textures.north (por ejemplo) apunte a "path"
-	*texture = path;
+	*texture_path = path;
+	printf("✓ Texture path validated: %s\n", path);
 	return (0);
 }

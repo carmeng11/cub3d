@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   player.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: carmen <carmen@student.42.fr>              +#+  +:+       +#+        */
+/*   By: cagomez- <cagomez-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/15 14:55:47 by cagomez-          #+#    #+#             */
-/*   Updated: 2026/02/21 21:03:00 by carmen           ###   ########.fr       */
+/*   Updated: 2026/03/08 14:01:00 by cagomez-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,10 +44,6 @@ static void	move_dir(t_game *game, float dir_x, float dir_y)
 }
 
 static void	handle_movement(t_game *game)
-
-
-
-
 {
 	t_player	*p;
 	
@@ -68,18 +64,55 @@ void	move_player(t_game *game)
 	handle_movement(game);
 }
 
-int	can_move(t_game *game, double x, double y)
-{
-	int	map_x;
-	int	map_y;
+// int	can_move(t_game *game, double x, double y)
+// {
+// 	int	map_x;
+// 	int	map_y;
 
-	map_x = (int)(x / BLOCK);
-	map_y = (int)(y / BLOCK);
-	if (map_x < 0 || map_x >= game->map.width)
-		return (0);
-	if (map_y < 0 || map_y >= game->map.height)
-		return (0);
-	if (game->map.grid[map_y][map_x] == '1')
-		return (0);
-	return (1);
+// 	map_x = (int)(x / BLOCK);
+// 	map_y = (int)(y / BLOCK);
+// 	if (map_x < 0 || map_x >= game->map.width)
+// 		return (0);
+// 	if (map_y < 0 || map_y >= game->map.height)
+// 		return (0);
+// 	if (game->map.grid[map_y][map_x] == '1')
+// 		return (0);
+// 	return (1);
+// }
+
+//CAN MOVE CORRECCION DE LA VISION DEL MURO 
+int	can_move(t_game *game, float px, float py)
+{
+    int cell_x; // Columna del mapa donde está el jugador
+	int cell_y; // Fila del mapa donde está el jugador
+    float margin;
+	//vamos a haceer que el jugadro se detenga cuando esté a 15 pixeles del borde
+    margin = 15.0;  // Margen solo para movimiento del jugador
+
+    // Verificar las 4 esquinas del jugador (hitbox)
+    // Esquina superior izquierda
+    cell_x = (int)((px - margin) / BLOCK);
+    cell_y = (int)((py - margin) / BLOCK);
+    if (cell_x < 0 || cell_x >= game->map.width || cell_y < 0 || cell_y >= game->map.height)
+        return (0);
+    if (game->map.grid[cell_y][cell_x] == '1')
+        return (0);
+
+    // Esquina superior derecha
+    cell_x = (int)((px + margin) / BLOCK);
+    if (cell_x >= game->map.width || game->map.grid[cell_y][cell_x] == '1')
+        return (0);
+
+    // Esquina inferior izquierda
+    cell_y = (int)((py + margin) / BLOCK);
+    cell_x = (int)((px - margin) / BLOCK);
+    if (cell_y >= game->map.height || game->map.grid[cell_y][cell_x] == '1')
+        return (0);
+
+    // Esquina inferior derecha
+    cell_x = (int)((px + margin) / BLOCK);
+    if (game->map.grid[cell_y][cell_x] == '1')
+        return (0);
+
+    return (1);
 }

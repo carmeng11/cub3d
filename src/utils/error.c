@@ -13,3 +13,8 @@ void	print_error(char *msg)
 	write(2, msg, len);
 	write(2, "\n", 1);
 }
+void	malloc_error()
+{
+	perror("Problems with malloc");
+	exit(EXIT_FAILURE);
+}
